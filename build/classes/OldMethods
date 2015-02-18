@@ -1,0 +1,96 @@
+public char[][] solveMaze()
+    {
+        char[][] toReturn = MazeMap;
+        Stack moves = new Stack();
+        int x = 0;
+        int y = 0;
+        //Find x and y
+        for (int i = 0; i < toReturn.length; i++) 
+        {
+            for (int j = 0; j < toReturn[0].length; j++) 
+            {
+                if(toReturn[i][j] == 'S')
+                {
+                    x = i;
+                    y = j;
+                }
+            }
+        }
+        ArrayList<XandY> previousmoves = new ArrayList<XandY>();
+        while(x != 0 && x != toReturn.length && y != 0 && y != toReturn.length)
+        {
+            boolean firstdone = false;
+            if(toReturn[x][y+1] == ' ')
+            {
+                moves.push(new XandY(x,y+1));
+                firstdone = true;
+                previousmoves.add(new XandY(x, y+1));
+            }
+            if(toReturn[x+1][y] == ' ')
+            {
+                if(firstdone)
+                {
+                    moves.push(new XandY(-1,-1));
+                    previousmoves.add((new XandY(-1,-1)));
+                }
+                moves.push(new XandY(x+1,y));
+                firstdone = true;
+                previousmoves.add(new XandY(x+1, y));
+            }
+            if(toReturn[x][y-1] == ' ')
+            {
+                if(firstdone)
+                {
+                    moves.push(new XandY(-1,-1));
+                    previousmoves.add((new XandY(-1,-1)));
+                }
+                moves.push(new XandY(x,y-1));
+                firstdone = true;
+                previousmoves.add(new XandY(x, y-1));
+            }
+            if(toReturn[x-1][y] == ' ')
+            {
+                if(firstdone)
+                {
+                    moves.push(new XandY(-1,-1));
+                    previousmoves.add((new XandY(-1,-1)));
+                }
+                moves.push(new XandY(x-1,y));
+                previousmoves.add(new XandY(x-1, y));
+            }
+            toReturn[x][y] = '*';
+            XandY temp = (XandY)(moves.pop());
+            if(temp.getX() >=0 && temp.getY() >=0)
+            {
+                x = temp.getX();
+                y = temp.getY();
+            }
+            else//IF SPECIAL
+            {
+                System.out.println("To Special");
+                int amounttodel = 0;
+                while(previousmoves.get((previousmoves.size()-1)-amounttodel).getX() != -1)
+                {
+                    amounttodel++;
+                }
+                System.out.println(amounttodel);
+                System.out.println(this.toString());
+                System.out.println(moves.toString());
+//                System.exit(1);
+                for (int i = 0; i < amounttodel; i++) 
+                {
+                    MazeMap[previousmoves.get(previousmoves.size()-1).getX()][previousmoves.get(previousmoves.size()-1).getY()] = ' ';
+                    previousmoves.remove(previousmoves.size()-1);
+                }
+                System.out.println(this.toString());
+                System.out.println(moves.toString());
+                temp =(XandY)(moves.pop());
+                x = temp.getX();
+                y = temp.getY();
+            }
+//            System.out.println(this.toString());
+        }
+        System.out.println(previousmoves.toString());
+        return toReturn;
+    }
+    
